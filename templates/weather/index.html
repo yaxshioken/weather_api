@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/4.5.3/cerulean/bootstrap.min.css"
+    integrity="sha512-dQLT/B7byn2LjN/DN4zeBKpwGV6qbidV0XiMRWQOL7TGrV7FkZFldkGG+DGMU+CQnMTcRZlUI7GMWt1j6akNew=="
+    crossorigin="anonymous" />
+    <script src=
+
+"https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
+
+    </script>
+    <script src=
+
+"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
+
+    </script>
+
+    <link href=
+"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css"
+
+        rel="stylesheet" type="text/css" />
+
+
+  <title>Weather App </title>
+</head>
+
+<body>
+  <div class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+    <div class="container">
+      <a href="../" class="navbar-brand">Weather App <span style="color: rgb(12, 133, 239);"> <strong> -AZIZJON</strong>
+        </span> </a>
+      <a href="https://openweathermap.org" class="navbar-tech">OpenWeather - Get Your API</a>
+    </div>
+
+  </div>
+
+  <br /><br /> <br>
+  <div id="jumbotron" class="jumbotron" style="text-align: center; margin-top:50px">
+    <h1 class="display-5">Weather App</h1>
+
+    <h5>Using Openweathermap API and Django Framework</h5>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <form method="post" class="col-md" id="search_form">
+      {% csrf_token %}
+      <div class=" input-group">
+
+      <input type="text" class="form-control" name="city" id="tags" placeholder="Choose Your City ...">
+      <div class="input-group-btn">
+        <button id ="get-data" type="submit" class="btn btn-primary">Search</button>
+
+      </div>
+      </div>
+      <form>
+  </nav>
+  <br> <br>
+  <div class="row">
+    <div class="col d-flex justify-content-center" >
+      <div id="response_list" class=" card text-white bg-light mb-6">
+      
+        
+      </div>
+    </div>
+    <script>
+    button = document.getElementById("get-data");
+    button.addEventListener("click", getWeatherData);
+
+function getWeatherData(e) {
+  const newXHRRequest = new XMLHttpRequest();
+  const name_input = document.getElementById("tags").value;
+
+  newXHRRequest.open(
+    "GET",
+    'https://api.openweathermap.org/data/2.5/weather?q='+ name_input + '&units=metric&APPID=3eb3e2e6a06817b3e14b2862ef367bac',
+    true
+  );
+
+  newXHRRequest.onload = function () {
+    if (this.status === 200) {
+      const weather_data = JSON.parse(this.responseText);
+      var output = weather_data;
+    }
+    else {
+        output = "No data";
+      }
+      console.log(output)
+
+      document.getElementById("response_list").innerHTML = `<h4 id="city_name"><span class="badge badge-primary" id="span_name" >Name of City :</span> ${output.name}</h4>
+        <h4 id="country_code"><span class="badge badge-primary">Country Code :</span> ${output.sys.country} </h4>
+        <h4 id ="coordinates"><span class="badge badge-primary">Coordinates [ longitude, latitude ] :</span> ${output.coord.lon }, ${ output.coord.lat}</h4>
+        <h4 id="temperature"><span class="badge badge-primary">Temperature in Celsius :</span> ${output.main.temp}</h4>
+        <h4 id="pressure"><span class="badge badge-primary">Pressure :</span> ${ output.main.pressure} hPa </h4>
+        <h4 id="timezone"><span class="badge badge-primary">Timezone :</span> ${output.timezone /3600}hr(s) away from UTC</h4>
+
+
+        <h4 id="humidity"><span class="badge badge-primary">Humidity : </span> ${output.main.humidity}%</h4>
+        <h4 id="forcast"><span class="badge badge-primary">Forecast : </span>  <img
+            src="http://openweathermap.org/img/w/${output['weather']['0']['icon']}.png" alt="Image" style="width:70px"></h4>
+        <h4 id="description"><span class="badge badge-primary">Description : </span> ${output['weather']['0']['description']} </h4>
+`;
+  };
+
+  newXHRRequest.send();
+
+  e.preventDefault();
+
+  
+}
+  
+                
+
+  </script>
+  
+</body>
+
+</html>
